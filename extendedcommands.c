@@ -893,6 +893,7 @@ void show_nandroid_menu()
             show_nandroid_advanced_restore_menu("/emmc");
             break;
         case 6:
+            {
                 char backup_path[PATH_MAX];
                 time_t t = time(NULL);
                 struct tm *tmp = localtime(&t);
@@ -907,6 +908,7 @@ void show_nandroid_menu()
                     strftime(backup_path, sizeof(backup_path), "/usbdrive/clockworkmod/backup/%F.%H.%M.%S", tmp);
                 }
                 nandroid_backup(backup_path);
+            }
             break;
         case 7:
             show_nandroid_advanced_restore_menu("/usbdrive");
