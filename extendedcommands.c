@@ -829,11 +829,17 @@ void show_nandroid_menu()
                             "backup to internal sdcard",
                             "restore from internal sdcard",
                             "advanced restore from internal sdcard",
+                            "backup to usb drive",
+                            "restore from usb drive",
+                            "advanced restore from usb drive",
                             NULL
     };
 
     if (volume_for_path("/emmc") == NULL || volume_for_path("/sdcard") == NULL && is_data_media())
         list[3] = NULL;
+
+    if (volume_for_path("/usbdrive") == NULL)
+        list[6] = NULL;
 
     int chosen_item = get_menu_selection(headers, list, 0, 0);
     switch (chosen_item)
@@ -885,6 +891,28 @@ void show_nandroid_menu()
             break;
         case 5:
             show_nandroid_advanced_restore_menu("/emmc");
+            break;
+        case 6:
+                char backup_path[PATH_MAX];
+                time_t t = time(NULL);
+                struct tm *tmp = localtime(&t);
+                if (tmp == NULL)
+                {
+                    struct timeval tp;
+                    gettimeofday(&tp, NULL);
+                    sprintf(backup_path, "/usbdrive/clockworkmod/backup/%d", tp.tv_sec);
+                }
+                else
+                {
+                    strftime(backup_path, sizeof(backup_path), "/usbdrive/clockworkmod/backup/%F.%H.%M.%S", tmp);
+                }
+                nandroid_backup(backup_path);
+            break;
+        case 7:
+            show_nandroid_advanced_restore_menu("/usbdrive");
+            break;
+        case 8:
+            show_nandroid_advanced_restore_menu("/usbdrive");
             break;
     }
 }
